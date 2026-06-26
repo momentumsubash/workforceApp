@@ -1,0 +1,15 @@
+{
+  "reporter": ["html", "lcov", "text-summary"],
+  "report-dir": "reports/coverage",
+  "all": true,
+  "include": [
+    "src/**/*.js",
+    "src/**/*.jsx"
+  ],
+  "exclude": [
+    "src/**/*.test.js",
+    "src/**/*.spec.js",
+    "src/serviceWorker.js",
+    "src/setupTests.js"
+  ]
+}

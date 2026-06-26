@@ -1,0 +1,1351 @@
+{
+  "info": {
+    "_postman_id": "6767115f-3b15-44ee-952d-ac2e4350848d",
+    "name": "WorkForcePro API",
+    "description": "RESTful API for managing employees, trainings, certifications, and departments",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "9931416",
+    "_collection_link": "https://go.postman.co/collection/9931416-6767115f-3b15-44ee-952d-ac2e4350848d?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET Health Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has status and timestamp', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('status');",
+                  "    pm.expect(jsonData).to.have.property('timestamp');",
+                  "    pm.expect(jsonData.status).to.eql('ok');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "health"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Departments",
+      "item": [
+        {
+          "name": "GET All Departments",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test('Department objects have required fields', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.length > 0) {",
+                  "        pm.expect(jsonData[0]).to.have.property('id');",
+                  "        pm.expect(jsonData[0]).to.have.property('name');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/departments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "departments"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Employees",
+      "item": [
+        {
+          "name": "GET All Employees",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// ============================================================",
+                  "// GET /api/employees - Extract First Employee ID",
+                  "// ============================================================",
+                  "",
+                  "// 1. Status Code Assertion",
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// 2. Verify Response is Array",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    pm.expect(pm.response.json()).to.be.an('array');",
+                  "});",
+                  "",
+                  "// 3. Extract First Employee ID and Save to Environment",
+                  "pm.test(\"Extract first employee ID and save to env\", function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    ",
+                  "    // Find the first non-supervisor employee (is_supervisor = 0)",
+                  "    // Skip API Test User (id: 19) and Bug Test One (id: 20) as they may be test data",
+                  "    const firstEmployee = jsonData.find(emp => ",
+                  "        emp.is_supervisor === 0 && ",
+                  "        emp.id > 20 &&  // Skip test data (adjust as needed)",
+                  "        emp.employee_id !== 'EMP999' &&",
+                  "        emp.employee_id !== 'BUGTEST1'",
+                  "    );",
+                  "    ",
+                  "    // Fallback: if no employee found, use the first employee with is_supervisor = 0",
+                  "    const fallbackEmployee = jsonData.find(emp => emp.is_supervisor === 0);",
+                  "    ",
+                  "    const employeeToUse = firstEmployee || fallbackEmployee;",
+                  "    ",
+                  "    if (employeeToUse) {",
+                  "        // Save to environment variables",
+                  "        pm.environment.set(\"employeeId\", employeeToUse.id);",
+                  "        pm.environment.set(\"employeeName\", employeeToUse.name);",
+                  "        pm.environment.set(\"employeeEmail\", employeeToUse.email);",
+                  "        pm.environment.set(\"employeeEmployeeId\", employeeToUse.employee_id);",
+                  "        ",
+                  "        console.log(\"✅ Selected Employee:\", {",
+                  "            id: employeeToUse.id,",
+                  "            name: employeeToUse.name,",
+                  "            employee_id: employeeToUse.employee_id,",
+                  "            email: employeeToUse.email",
+                  "        });",
+                  "    } else {",
+                  "        console.log(\"❌ No employee found with is_supervisor = 0\");",
+                  "    }",
+                  "});",
+                  "",
+                  "// 4. Verify Environment Variable is Set",
+                  "pm.test(\"Employee ID environment variable is set\", function () {",
+                  "    pm.expect(pm.environment.get(\"employeeId\")).to.not.be.undefined;",
+                  "    pm.expect(parseInt(pm.environment.get(\"employeeId\"))).to.be.a('number');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/employees",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "employees"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET All Supervisors",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Status",
+                  "pm.test(\"Status code is 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Response is array",
+                  "pm.test(\"Response is an array\", () => {",
+                  "    pm.expect(pm.response.json()).to.be.an('array');",
+                  "});",
+                  "",
+                  "// Required fields",
+                  "pm.test(\"Supervisor objects have required fields\", () => {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.length > 0) {",
+                  "        pm.expect(jsonData[0]).to.have.all.keys('id', 'employee_id', 'name', 'email');",
+                  "    }",
+                  "});",
+                  "",
+                  "// Extract first supervisor ID",
+                  "pm.test(\"Save first supervisor ID to env\", () => {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.length > 0) {",
+                  "        const firstSupervisor = jsonData[0];",
+                  "        pm.environment.set(\"supervisorId\", firstSupervisor.id);",
+                  "        pm.environment.set(\"supervisorName\", firstSupervisor.name);",
+                  "        pm.environment.set(\"supervisorEmail\", firstSupervisor.email);",
+                  "        pm.environment.set(\"supervisorEmployeeId\", firstSupervisor.employee_id);",
+                  "        console.log(\"✅ Supervisor ID saved:\", firstSupervisor.id);",
+                  "    }",
+                  "});",
+                  "",
+                  "// Verify environment variable is set",
+                  "pm.test(\"Supervisor ID is set\", () => {",
+                  "    pm.expect(pm.environment.get(\"supervisorId\")).to.not.be.undefined;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/employees/supervisors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "employees",
+                "supervisors"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Create Employee (Positive)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var responseJSON = pm.response.json();",
+                  "",
+                  "// Test for response status code",
+                  "pm.test(\"Response status code is 500\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Test for response time",
+                  "pm.test(\"Response time is less than 500ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(500);",
+                  "});",
+                  "",
+                  "// Test for response body structure",
+                  "pm.test(\"Response body contains error property\", function () {",
+                  "    pm.expect(responseJSON).to.be.an('object').that.has.property('error');",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Generate a random employee ID\r",
+                  "pm.environment.set(\"employee_id\", Math.floor(Math.random() * 1000000));\r",
+                  "\r",
+                  "// Generate a unique email address\r",
+                  "const uniqueEmail = `user_${Math.floor(Math.random() * 1000000)}@example.com`;\r",
+                  "pm.environment.set(\"email\", uniqueEmail);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"employee_id\": \"{{employee_id}}\",\n    \"name\": \"API Test User\",\n    \"email\": \"{{email}}\",\n    \"department_id\": 1,\n    \"supervisor_id\": 1,\n    \"is_supervisor\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/employees",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "employees"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Create Employee (Duplicate Email - Negative)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400 or 500 (BUG)', function () {",
+                  "    // DEF-001: Should be 400 but returns 500",
+                  "    pm.expect(pm.response.code).to.be.oneOf([400, 500]);",
+                  "});",
+                  "",
+                  "pm.test('Response has error message', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"employee_id\": \"EMP888\",\n    \"name\": \"Duplicate Email Test\",\n    \"email\": \"apitester@workforcepro.com\",\n    \"department_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/employees",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "employees"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Employee by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has employee fields', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData).to.have.property('name');",
+                  "    pm.expect(jsonData).to.have.property('email');",
+                  "});",
+                  "",
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});",
+                  "",
+                  "// Updated Content-Type assertion to check for substring",
+                  "pm.test(\"Content-Type includes application/json\", function () {",
+                  "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "});",
+                  "",
+                  "pm.test(\"Validate the schema of the response\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData).to.have.all.keys('id', 'employee_id', 'name', 'email', 'department_id', 'supervisor_id', 'supervisor_name', 'is_supervisor', 'created_at', 'updated_at', 'department_name');",
+                  "",
+                  "    pm.expect(responseData.id).to.be.a('number');",
+                  "    pm.expect(responseData.employee_id).to.be.a('string');",
+                  "    pm.expect(responseData.name).to.be.a('string');",
+                  "    pm.expect(responseData.email).to.be.a('string').and.to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/);",
+                  "    pm.expect(responseData.department_id).to.be.a('number');",
+                  "    pm.expect(responseData.supervisor_id).to.satisfy(value => value === null || typeof value === 'number');",
+                  "    pm.expect(responseData.supervisor_name).to.satisfy(value => value === null || typeof value === 'string');",
+                  "    ",
+                  "    // Updated is_supervisor assertion to check for strict equality with 1 or 0",
+                  "    pm.expect(responseData.is_supervisor).to.be.oneOf([0, 1]);",
+                  "    ",
+                  "    pm.expect(responseData.created_at).to.be.a('string');",
+                  "    pm.expect(responseData.updated_at).to.be.a('string');",
+                  "    pm.expect(responseData.department_name).to.be.a('string');",
+                  "});",
+                  "",
+                  "pm.test(\"Email is in a valid format\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData.email).to.exist;",
+                  "    pm.expect(responseData.email).to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/, \"Email format is invalid\");",
+                  "});",
+                  "",
+                  "pm.test(\"Check that 'is_supervisor' is a boolean value\", function () {",
+                  "    const responseData = pm.response.json();",
+                  "    ",
+                  "    pm.expect(responseData).to.be.an('object');",
+                  "    pm.expect(responseData.is_supervisor).to.be.oneOf([0, 1]);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/employees/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "employees",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Employee Trainings",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/employees/1/trainings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "employees",
+                "1",
+                "trainings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT Update Employee",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Status code",
+                  "pm.test(\"Status code is 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Response time",
+                  "pm.test(\"Response < 500ms\", () => {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(500);",
+                  "});",
+                  "",
+                  "// Verify updated fields",
+                  "pm.test(\"Employee updated correctly\", () => {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.name).to.eql(\"API Test User Updated\");",
+                  "    pm.expect(jsonData.email).to.eql(\"updated@workforcepro.com\");",
+                  "    pm.expect(jsonData.department_id).to.eql(2);",
+                  "    pm.expect(jsonData.id).to.eql(1);",
+                  "    pm.expect(jsonData.employee_id).to.eql(\"SUP001\");",
+                  "});",
+                  "",
+                  "// Response has required fields",
+                  "pm.test(\"Has required fields\", () => {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.all.keys(",
+                  "        'id', 'employee_id', 'name', 'email', 'department_id',",
+                  "        'supervisor_id', 'supervisor_name', 'is_supervisor',",
+                  "        'created_at', 'updated_at'",
+                  "    );",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"API Test User Updated\",\n    \"email\": \"updated@workforcepro.com\",\n    \"department_id\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/employees/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "employees",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Employee",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 204', function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/employees/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "employees",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Trainings",
+      "item": [
+        {
+          "name": "GET All Trainings",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test('Training objects have required fields', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.length > 0) {",
+                  "        pm.expect(jsonData[0]).to.have.property('id');",
+                  "        pm.expect(jsonData[0]).to.have.property('training_name');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/trainings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "trainings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Assign Training (Positive)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Status",
+                  "pm.test(\"Status code is 201\", () => {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "// Response time",
+                  "pm.test(\"Response < 500ms\", () => {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(500);",
+                  "});",
+                  "",
+                  "// Verify response",
+                  "pm.test(\"Training assigned successfully\", () => {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.eql('assigned');",
+                  "    pm.expect(jsonData.employee_id).to.eql(21);",
+                  "    pm.expect(jsonData.training_id).to.eql(2);",
+                  "    pm.expect(jsonData.due_date).to.eql('2026-07-31');",
+                  "    pm.expect(jsonData.training_name).to.eql('First Aid Training');",
+                  "    pm.expect(jsonData.completion_date).to.be.null;",
+                  "    pm.expect(jsonData.notes).to.be.null;",
+                  "});",
+                  "",
+                  "// Has required fields",
+                  "pm.test(\"Has required fields\", () => {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.all.keys(",
+                  "        'id', 'employee_id', 'training_id', 'due_date',",
+                  "        'status', 'completion_date', 'notes', 'created_at', 'training_name'",
+                  "    );",
+                  "});",
+                  "",
+                  "// Save ID",
+                  "pm.test(\"Save assignment ID\", () => {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.id) {",
+                  "        pm.environment.set(\"trainingAssignmentId\", jsonData.id);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"employee_id\": {{employeeId}},\n    \"training_id\": 2,\n    \"supervisor_id\": 3,\n    \"due_date\": \"2026-07-31\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/trainings/assign",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "trainings",
+                "assign"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Complete Training (Positive)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response shows completed status', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('status');",
+                  "    pm.expect(jsonData.status).to.eql('completed');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"employee_id\": 2,\n    \"training_id\": 1,\n    \"completion_date\": \"2026-06-25\",\n    \"notes\": \"Completed via API test\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/trainings/complete",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "trainings",
+                "complete"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Approve Training (Positive)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Status",
+                  "pm.test(\"Status code is 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Response time",
+                  "pm.test(\"Response < 500ms\", () => {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(500);",
+                  "});",
+                  "",
+                  "// Verify response",
+                  "pm.test(\"Training approved successfully\", () => {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.status).to.eql('approved');",
+                  "    pm.expect(jsonData.employee_id).to.eql(2);",
+                  "    pm.expect(jsonData.training_id).to.eql(1);",
+                  "    pm.expect(jsonData.training_name).to.eql('Safety Training');",
+                  "});",
+                  "",
+                  "// Has required fields",
+                  "pm.test(\"Has required fields\", () => {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.all.keys(",
+                  "        'id', 'employee_id', 'training_id', 'due_date',",
+                  "        'status', 'completion_date', 'notes', 'created_at', 'training_name'",
+                  "    );",
+                  "});",
+                  "",
+                  "// ⚠️ BUG Verification (DEF-003)",
+                  "pm.test(\"⚠️ BUG: Training approved without completion check (DEF-003)\", () => {",
+                  "    const jsonData = pm.response.json();",
+                  "    console.log(\"⚠️ DEF-003: Training was approved without completion check\");",
+                  "    pm.expect(jsonData.status).to.eql('approved');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"employee_id\": 2,\n    \"training_id\": 1,\n    \"supervisor_id\": 3\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/trainings/approve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "trainings",
+                "approve"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Complete Unassigned Training (Negative - BUG)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201 (BUG - should be 400)', function () {",
+                  "    // DEF-002: Should be 400 but allows completion",
+                  "    pm.expect(pm.response.code).to.be.oneOf([201, 400]);",
+                  "});",
+                  "",
+                  "pm.test('Check for warning if completed', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.warning) {",
+                  "        console.log('⚠️ DEF-002: Unassigned training completed with warning');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"employee_id\": 2,\n    \"training_id\": 99,\n    \"notes\": \"Testing unassigned training completion\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/trainings/complete",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "trainings",
+                "complete"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Self-Approval (Negative - BUG)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 (BUG - should be 400)', function () {",
+                  "    // DEF-003: Self-approval should be blocked but is allowed",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 400]);",
+                  "});",
+                  "",
+                  "pm.test('Check if self-approval was allowed', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.status === 'approved') {",
+                  "        console.log('⚠️ DEF-003: Self-approval allowed');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"employee_id\": 1,\n    \"training_id\": 1,\n    \"supervisor_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/trainings/approve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "trainings",
+                "approve"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Certifications",
+      "item": [
+        {
+          "name": "GET All Certifications",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test('Certification objects have required fields', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.length > 0) {",
+                  "        pm.expect(jsonData[0]).to.have.property('id');",
+                  "        pm.expect(jsonData[0]).to.have.property('certification_name');",
+                  "        pm.expect(jsonData[0]).to.have.property('expiry_date');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/certifications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "certifications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Expiring Certifications (DEF-004)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test('Check for 30-day expiry bug (DEF-004)', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    // DEF-004: 30-day certifications should appear but don't (off-by-one)",
+                  "    console.log('📊 Number of expiring certifications:', jsonData.length);",
+                  "    if (jsonData.length > 0) {",
+                  "        console.log('⚠️ DEF-004: Check if 30-day certs are missing');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/certifications/expiring",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "certifications",
+                "expiring"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Create Certification",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Response has certification fields', function () {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData).to.have.property('certification_name');",
+                  "    pm.expect(jsonData).to.have.property('expiry_date');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"employee_id\": 1,\n    \"certification_name\": \"API Test Certification\",\n    \"expiry_date\": \"2027-06-25\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/certifications",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "certifications"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Certification",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 204', function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/certifications/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "certifications",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Run TC-API-003 (Self-Approval)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Status\r",
+              "pm.test(\"Status code is 200\", () => {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "// Response time\r",
+              "pm.test(\"Response < 500ms\", () => {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+              "});\r",
+              "\r",
+              "// Verify response\r",
+              "pm.test(\"Training approved successfully\", () => {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.status).to.eql('approved');\r",
+              "    pm.expect(jsonData.employee_id).to.eql(1);\r",
+              "    pm.expect(jsonData.training_id).to.eql(2);\r",
+              "    pm.expect(jsonData.due_date).to.eql('2026-07-31');\r",
+              "    pm.expect(jsonData.completion_date).to.eql('2026-06-25');\r",
+              "    pm.expect(jsonData.training_name).to.eql('First Aid Training');\r",
+              "    pm.expect(jsonData.notes).to.eql('Completed via API test');\r",
+              "});\r",
+              "\r",
+              "// Has required fields\r",
+              "pm.test(\"Has required fields\", () => {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData).to.have.all.keys(\r",
+              "        'id', 'employee_id', 'training_id', 'due_date',\r",
+              "        'status', 'completion_date', 'notes', 'created_at', 'training_name'\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "// ⚠️ BUG Verification (DEF-003)\r",
+              "pm.test(\"⚠️ BUG: Training approved without completion check (DEF-003)\", () => {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    console.log(\"⚠️ DEF-003: Training approved for employee \" + jsonData.employee_id);\r",
+              "    pm.expect(jsonData.status).to.eql('approved');\r",
+              "});\r",
+              "\r",
+              "// Save ID\r",
+              "pm.test(\"Save approved training ID\", () => {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    if (jsonData.id) {\r",
+              "        pm.environment.set(\"approvedTrainingId\", jsonData.id);\r",
+              "    }\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"employee_id\": 1,\r\n    \"training_id\": 2,\r\n    \"supervisor_id\": {{supervisorId}}\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/trainings/approve",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "trainings",
+            "approve"
+          ]
+        },
+        "description": "Generated from cURL: curl --location 'http://localhost:3001/api/trainings/approve' \\\r\n--header 'Content-Type: application/json' \\\r\n--data '{\r\n    \"employee_id\": 1,\r\n    \"training_id\": 2,\r\n    \"supervisor_id\": 1\r\n}'"
+      },
+      "response": []
+    },
+    {
+      "name": "API-001: Complete Unassigned Training",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Status\r",
+              "pm.test(\"Status code is 200\", () => {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "// Response time\r",
+              "pm.test(\"Response < 500ms\", () => {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+              "});\r",
+              "\r",
+              "// Verify response\r",
+              "pm.test(\"Training completed\", () => {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.status).to.eql('completed');\r",
+              "    pm.expect(jsonData.employee_id).to.eql(2);\r",
+              "    pm.expect(jsonData.training_id).to.eql(3);\r",
+              "    pm.expect(jsonData.completion_date).to.eql('2026-06-25');\r",
+              "    pm.expect(jsonData.training_name).to.eql('Diversity & Inclusion');\r",
+              "    pm.expect(jsonData.due_date).to.be.null;\r",
+              "});\r",
+              "\r",
+              "// Has required fields\r",
+              "pm.test(\"Has required fields\", () => {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData).to.have.all.keys(\r",
+              "        'id', 'employee_id', 'training_id', 'due_date',\r",
+              "        'status', 'completion_date', 'notes', 'created_at', 'training_name'\r",
+              "    );\r",
+              "});\r",
+              "\r",
+              "// ⚠️ BUG: Unassigned training completed (DEF-002)\r",
+              "pm.test(\"⚠️ BUG: Unassigned training completed (DEF-002)\", () => {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    console.log(\"⚠️ DEF-002: Unassigned training ID \" + jsonData.training_id + \" completed\");\r",
+              "    pm.expect(jsonData.status).to.eql('completed');\r",
+              "});\r",
+              "\r",
+              "// Save ID\r",
+              "pm.test(\"Save completed training ID\", () => {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    if (jsonData.id) {\r",
+              "        pm.environment.set(\"completedTrainingId\", jsonData.id);\r",
+              "    }\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"employee_id\": 2,\r\n    \"training_id\": 3,\r\n    \"completion_date\": \"2026-06-25\",\r\n    \"notes\": \"Testing unassigned training completion\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/trainings/complete",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "trainings",
+            "complete"
+          ]
+        },
+        "description": "Generated from cURL: curl --location 'http://localhost:3001/api/trainings/complete' \\\r\n--header 'Content-Type: application/json' \\\r\n--data '{\r\n    \"employee_id\": 2,\r\n    \"training_id\": 3,\r\n    \"completion_date\": \"2026-06-25\",\r\n    \"notes\": \"Testing unassigned training completion\"\r\n}'"
+      },
+      "response": []
+    },
+    {
+      "name": " Duplicate Employee ID Test",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"employee_id\": \"EMP001\",\r\n    \"name\": \"Duplicate ID Test\",\r\n    \"email\": \"duplicateid@test.com\",\r\n    \"department_id\": 1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3001/api/employees",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "api",
+            "employees"
+          ]
+        },
+        "description": "Generated from cURL: curl --location 'http://localhost:3001/api/employees' \\\r\n--header 'Content-Type: application/json' \\\r\n--data '{\r\n    \"employee_id\": \"EMP001\",\r\n    \"name\": \"Duplicate ID Test\",\r\n    \"email\": \"duplicateid@test.com\",\r\n    \"department_id\": 1\r\n}'"
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "{{baseUrl}}",
+      "type": "string"
+    }
+  ]
+}

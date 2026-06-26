@@ -1,0 +1,27 @@
+{
+  "employee": {
+    "name": "Test Employee",
+    "employee_id": "EMP999",
+    "email": "test@workforcepro.com",
+    "department": "Engineering",
+    "supervisor": "John Doe"
+  },
+  "training": {
+    "name": "Safety Training",
+    "dueDate": "2026-12-31"
+  },
+  "certification": {
+    "name": "Test Certification",
+    "expiryDate": "2027-12-31"
+  },
+  "demoUsers": {
+    "supervisors": [
+      { "email": "jane.smith@workforcepro.com", "name": "Jane Smith" },
+      { "email": "mike.johnson@workforcepro.com", "name": "Mike Johnson" }
+    ],
+    "employees": [
+      { "email": "john.doe@workforcepro.com", "name": "John Doe" },
+      { "email": "bob.wilson@workforcepro.com", "name": "Bob Wilson" }
+    ]
+  }
+}

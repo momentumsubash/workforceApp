@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "training_id": 1,
+    "training_name": "Safety Training",
+    "status": "assigned",
+    "due_date": "2026-12-31",
+    "completion_date": null
+  },
+  {
+    "id": 2,
+    "training_id": 2,
+    "training_name": "Code of Conduct",
+    "status": "completed",
+    "due_date": "2026-11-30",
+    "completion_date": "2026-06-15"
+  },
+  {
+    "id": 3,
+    "training_id": 3,
+    "training_name": "Workplace Ethics",
+    "status": "approved",
+    "due_date": "2026-10-31",
+    "completion_date": "2026-06-01"
+  }
+]

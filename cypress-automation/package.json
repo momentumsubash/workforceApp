@@ -1,0 +1,31 @@
+{
+  "name": "workforcepro-cypress-automation",
+  "version": "1.0.0",
+  "description": "Cypress automation tests for WorkForcePro",
+  "main": "index.js",
+  "scripts": {
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "cypress:run:headed": "cypress run --headed",
+    "report": "npx mochawesome-merge reports/html/*.json > reports/html/merged.json && npx marge reports/html/merged.json --reportDir reports/html --inline",
+    "coverage": "npx nyc report --reporter=html --reporter=text --report-dir=reports/coverage",
+    "test": "cypress run",
+    "clean": "rm -rf reports"
+  },
+  "devDependencies": {
+    "@cypress/code-coverage": "^4.0.3",
+    "@cypress/xpath": "^2.0.3",
+    "cypress": "^13.6.0",
+    "cypress-mochawesome-reporter": "^4.0.2",
+    "mochawesome": "^7.1.4",
+    "mochawesome-merge": "^5.1.1",
+    "mochawesome-report-generator": "^6.2.0"
+  },
+  "keywords": [
+    "cypress",
+    "automation",
+    "testing"
+  ],
+  "author": "Subash Acharya",
+  "license": "MIT"
+}
