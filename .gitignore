@@ -14,8 +14,7 @@ node_modules/
 build/
 dist/
 
-# Test reports and coverage
-reports/
+# Test reports and coverage (from non-cypress tools)
 coverage/
 .nyc_output/
 

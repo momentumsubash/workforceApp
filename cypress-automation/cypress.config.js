@@ -27,6 +27,7 @@ module.exports = defineConfig({
       saveAllAttempts: false,
     },
     setupNodeEvents(on, config) {
+      require('cypress-mochawesome-reporter/plugin')(on);
       return config;
     },
   },

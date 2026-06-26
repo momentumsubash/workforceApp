@@ -35,8 +35,9 @@ class EmployeesPage {
     return cy.getByCy('employee-modal-error');
   }
 
+  // The table body doesn't have its own data-cy, use the table and find tbody
   getTableBody() {
-    return cy.getByCy('employee-table-body', { timeout: 10000 });
+    return cy.getByCy('employee-table').find('tbody', { timeout: 10000 });
   }
 
   openAddModal() {
@@ -66,15 +67,15 @@ class EmployeesPage {
   }
 
   getFirstEditButton() {
-    return cy.get('tbody tr').first().find('[data-cy^="edit-employee-btn-"]');
+    return cy.getByCy('employee-table').find('tbody tr').first().find('[data-cy^="edit-employee-btn-"]');
   }
 
   getFirstDeleteButton() {
-    return cy.get('tbody tr').first().find('[data-cy^="delete-employee-btn-"]');
+    return cy.getByCy('employee-table').find('tbody tr').first().find('[data-cy^="delete-employee-btn-"]');
   }
 
   getFirstViewTrainingsButton() {
-    return cy.get('tbody tr').first().find('[data-cy^="view-trainings-btn-"]');
+    return cy.getByCy('employee-table').find('tbody tr').first().find('[data-cy^="view-trainings-btn-"]');
   }
 
   getMessage() {

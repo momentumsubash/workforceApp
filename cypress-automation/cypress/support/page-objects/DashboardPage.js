@@ -26,19 +26,11 @@ class DashboardPage {
 
   logout() {
     cy.getByCy('logout-btn').click();
-    cy.url().should('eq', Cypress.config().baseUrl + '/');
+    cy.url({ timeout: 10000 }).should('include', '/login');
   }
 
   waitForStatsToLoad() {
     cy.getByCy('dashboard-loading', { timeout: 10000 }).should('not.exist');
-  }
-
-  isLoginPageVisible() {
-    cy.getByCy('login-page').should('be.visible');
-  }
-
-  isLoginFormVisible() {
-    cy.getByCy('login-form').should('be.visible');
   }
 
   getErrorMessage() {
@@ -59,6 +51,10 @@ class DashboardPage {
 
   getNavItem(page) {
     return cy.getByCy(`nav-${page}`);
+  }
+
+  getLoading() {
+    return cy.getByCy('dashboard-loading');
   }
 }
 

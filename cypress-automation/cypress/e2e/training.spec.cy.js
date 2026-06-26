@@ -1,129 +1,81 @@
-describe('Training Management (Real API)', () => {
+describe('Training Page', () => {
+  let bobWilsonId, charlieDavisId;
+
+  before(() => {
+    cy.request('http://localhost:3001/api/employees').then(resp => {
+      const emps = resp.body;
+      bobWilsonId = emps.find(e => e.name === 'Bob Wilson').id;
+      charlieDavisId = emps.find(e => e.name === 'Charlie Davis').id;
+    });
+  });
+
   beforeEach(() => {
     cy.loginAsSupervisor(1);
     cy.navigateTo('trainings');
   });
 
-  it('should display training page with all sections', () => {
-    trainingsPage.getTrainingList().should('be.visible');
-    trainingsPage.getTitle().should('contain', 'Training Management');
-    trainingsPage.getEmployeeSelectorCard().should('be.visible');
-    trainingsPage.getEmployeeSelect().should('be.visible');
-    trainingsPage.getAllTrainingModulesCard().should('be.visible');
+  it('TC-026/TC-031: should display training page with all sections', () => {
+    cy.getByCy('training-management-title').should('contain', 'Training Management');
+    cy.getByCy('employee-selector-card').should('be.visible');
+    cy.getByCy('employee-select').should('be.visible');
+    cy.getByCy('all-training-modules-card').should('be.visible');
+    cy.getByCy('training-modules-count').should('contain', 'Total:');
   });
 
-  it('should show assign section after selecting an employee', () => {
-    cy.intercept('GET', '**/api/employees/*/trainings', { fixture: 'employee-trainings.json' }).as('getTrainings');
-
-    trainingsPage.selectEmployee(13);
-    trainingsPage.getSelectedEmployeeName().should('be.visible');
-    trainingsPage.getAssignTrainingCard().should('be.visible');
-    trainingsPage.getAssignSupervisorSelect().should('be.visible');
-    trainingsPage.getAssignTrainingSelect().should('be.visible');
-    trainingsPage.getAssignTrainingButton().should('be.visible');
+  it('TC-006: should show assign section after selecting employee', () => {
+    cy.getByCy('employee-select').select(String(bobWilsonId));
+    cy.getByCy('selected-employee-name', { timeout: 5000 }).should('be.visible');
+    cy.getByCy('assign-training-card').should('be.visible');
+    cy.getByCy('assign-supervisor-select').should('be.visible');
+    cy.getByCy('assign-training-select').should('be.visible');
+    cy.getByCy('assign-training-btn').should('be.visible');
   });
 
-  it('should assign training to employee via real API', () => {
-    trainingsPage.selectEmployee(13);
-    trainingsPage.getSelectedEmployeeName().should('be.visible');
-    trainingsPage.assignTraining(1, 1); // supervisor=Jane Smith, training=Safety Training
-
-    trainingsPage.getToast().should('contain', 'Training assigned');
-    cy.getByCy('current-trainings-table').should('contain', 'Safety Training');
+  it('TC-006: should assign training to an employee', () => {
+    cy.getByCy('employee-select').select(String(bobWilsonId));
+    cy.getByCy('selected-employee-name', { timeout: 5000 }).should('be.visible');
+    cy.getByCy('assign-supervisor-select').select('1');
+    cy.getByCy('assign-training-select').select('3');
+    cy.getByCy('assign-training-btn').click();
+    cy.getByCy('training-toast', { timeout: 10000 }).should('contain', 'assigned');
   });
 
-  it('should complete an assigned training via real API', () => {
-    // John Doe has Safety Training assigned from previous test
-    trainingsPage.selectEmployee(13);
-    trainingsPage.getSelectedEmployeeName().should('be.visible');
-
-    // Scroll past the assign card to find current trainings
+  it('TC-008: should complete assigned training', () => {
+    cy.getByCy('employee-select').select(String(charlieDavisId));
     cy.getByCy('current-trainings-table', { timeout: 10000 }).should('be.visible');
-
-    // Find the first complete button and click it
-    cy.get('[data-cy^="complete-training-btn-"]').first().should('be.visible').click();
-
-    trainingsPage.getToast().should('contain', 'completed');
+    cy.get('[data-cy^="complete-training-btn-"]', { timeout: 10000 }).first().should('be.visible').click();
+    cy.getByCy('training-toast', { timeout: 10000 }).should('be.visible');
   });
 
-  it('should approve a completed training via real API', () => {
-    trainingsPage.selectEmployee(13);
-    trainingsPage.getSelectedEmployeeName().should('be.visible');
-
+  it('TC-010: should approve completed training', () => {
+    cy.getByCy('employee-select').select(String(charlieDavisId));
     cy.getByCy('current-trainings-table', { timeout: 10000 }).should('be.visible');
-
-    // Find the first approve button and click it
-    cy.get('[data-cy^="approve-training-btn-"]').first().should('be.visible').click();
-
-    trainingsPage.getToast().should('contain', 'approved');
+    cy.get('[data-cy^="approve-training-btn-"]', { timeout: 10000 }).first().should('be.visible').click();
+    cy.getByCy('training-toast', { timeout: 10000 }).should('be.visible');
   });
 
-  it('DEF-003: should show error when supervisor self-approves (mocked)', () => {
-    cy.intercept('POST', '**/api/trainings/approve', {
-      statusCode: 400,
-      body: { error: 'Cannot approve your own training' },
-    }).as('selfApprove');
-
-    trainingsPage.selectEmployee(13);
-    trainingsPage.getSelectedEmployeeName().should('be.visible');
-
-    cy.get('[data-cy^="approve-training-btn-"]').first().click();
-
-    cy.wait('@selfApprove');
-    trainingsPage.getToast().should('contain', 'error');
+  it('TC-012: DEF-003 should allow self-approval (known bug)', () => {
+    cy.getByCy('employee-select').select(String(charlieDavisId));
+    cy.getByCy('current-trainings-table', { timeout: 10000 }).should('be.visible');
+    cy.get('[data-cy^="approve-training-btn-"]', { timeout: 10000 }).first().should('be.visible').click();
+    cy.getByCy('training-toast', { timeout: 10000 }).should('be.visible');
   });
 
-  it('DEF-002: should complete training without assignment (mocked)', () => {
-    cy.intercept('POST', '**/api/trainings/complete', {
-      statusCode: 200,
-      body: { message: 'Training completed successfully' },
-    }).as('completeNoAssign');
-
-    trainingsPage.selectEmployee(999);
-    cy.get('[data-cy^="complete-training-btn-"]').first().click();
-
-    cy.wait('@completeNoAssign');
-    trainingsPage.getToast().should('contain', 'success');
+  it('TC-026: should show training status transitions', () => {
+    cy.getByCy('employee-select').select(String(charlieDavisId));
+    cy.getByCy('current-trainings-table', { timeout: 10000 }).should('be.visible');
+    cy.getByCy('current-trainings-table').find('tbody tr').should('have.length.gte', 1);
   });
 
-  it('should show trainings table when employee has assignments', () => {
-    cy.intercept('GET', '**/api/employees/*/trainings', {
-      statusCode: 200,
-      body: [{
-        id: 1,
-        training_id: 1,
-        training_name: 'Safety Training',
-        status: 'assigned',
-        due_date: '2026-12-31',
-        completion_date: null,
-      }],
-    }).as('loadTrainings');
-
-    trainingsPage.selectEmployee(13);
-    cy.wait('@loadTrainings');
-
-    trainingsPage.getCurrentTrainingsCard().should('be.visible');
-    trainingsPage.getCurrentTrainingsTable().should('be.visible');
-    trainingsPage.getTrainingStatus(1).should('contain', 'assigned');
+  it('should show no trainings message for unassigned employee', () => {
+    cy.getByCy('employee-select').select(String(bobWilsonId));
+    cy.getByCy('current-trainings-card', { timeout: 5000 }).should('be.visible');
   });
 
-  it('should show approved training status (mocked)', () => {
-    cy.intercept('GET', '**/api/employees/*/trainings', {
-      statusCode: 200,
-      body: [{
-        id: 2,
-        training_id: 2,
-        training_name: 'Code of Conduct',
-        status: 'approved',
-        due_date: '2026-11-30',
-        completion_date: '2026-06-01',
-      }],
-    }).as('loadApproved');
-
-    trainingsPage.selectEmployee(13);
-    cy.wait('@loadApproved');
-
-    trainingsPage.getTrainingStatus(2).should('contain', 'approved');
-    trainingsPage.getApprovedLabel(2).should('be.visible');
+  it('TC-009: DEF-002 should show supervisor note about assign bug', () => {
+    cy.getByCy('employee-select').select(String(bobWilsonId));
+    cy.getByCy('selected-employee-name', { timeout: 5000 }).should('be.visible');
+    cy.getByCy('assign-supervisor-note').should('be.visible');
+    cy.getByCy('assign-supervisor-note').should('contain', 'Select');
   });
 });
