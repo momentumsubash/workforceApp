@@ -19,11 +19,6 @@ reports/
 coverage/
 .nyc_output/
 
-# Cypress
-cypress-automation/reports/
-cypress-automation/cypress/screenshots/
-cypress-automation/cypress/videos/
-
 # IDE/Editor
 .vscode/
 .idea/

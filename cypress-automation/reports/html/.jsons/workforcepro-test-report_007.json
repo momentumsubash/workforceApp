@@ -1,0 +1,271 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 9,
+    "passes": 7,
+    "pending": 0,
+    "failures": 2,
+    "start": "2026-06-26T05:04:34.396Z",
+    "end": "2026-06-26T05:05:01.083Z",
+    "duration": 26687,
+    "testsRegistered": 9,
+    "passPercent": 77.77777777777779,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "9a448b7a-bf73-40f8-8e28-258210006de3",
+      "title": "",
+      "fullFile": "cypress\\e2e\\training.spec.cy.js",
+      "file": "cypress\\e2e\\training.spec.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "5afb8c8c-5de3-4230-abe0-2b2f76b99cfa",
+          "title": "Training Management (Real API)",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "should display training page with all sections",
+              "fullTitle": "Training Management (Real API) should display training page with all sections",
+              "timedOut": null,
+              "duration": 681,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": "{\n  \"title\": \"cypress-mochawesome-reporter-videos-passed\",\n  \"value\": \"cypress\\\\e2e\\\\training.spec.cy.js\"\n}",
+              "code": "trainingsPage.getTrainingList().should('be.visible');\ntrainingsPage.getTitle().should('contain', 'Training Management');\ntrainingsPage.getEmployeeSelectorCard().should('be.visible');\ntrainingsPage.getEmployeeSelect().should('be.visible');\ntrainingsPage.getAllTrainingModulesCard().should('be.visible');",
+              "err": {},
+              "uuid": "0ab4a7a5-5e93-4c97-a44f-474cd5555a00",
+              "parentUUID": "5afb8c8c-5de3-4230-abe0-2b2f76b99cfa",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should show assign section after selecting an employee",
+              "fullTitle": "Training Management (Real API) should show assign section after selecting an employee",
+              "timedOut": null,
+              "duration": 628,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": "{\n  \"title\": \"cypress-mochawesome-reporter-videos-passed\",\n  \"value\": \"cypress\\\\e2e\\\\training.spec.cy.js\"\n}",
+              "code": "cy.intercept('GET', '**/api/employees/*/trainings', {\n  fixture: 'employee-trainings.json'\n}).as('getTrainings');\ntrainingsPage.selectEmployee(13);\ntrainingsPage.getSelectedEmployeeName().should('be.visible');\ntrainingsPage.getAssignTrainingCard().should('be.visible');\ntrainingsPage.getAssignSupervisorSelect().should('be.visible');\ntrainingsPage.getAssignTrainingSelect().should('be.visible');\ntrainingsPage.getAssignTrainingButton().should('be.visible');",
+              "err": {},
+              "uuid": "572dd2ce-8d0e-4f0e-8201-359cc5758642",
+              "parentUUID": "5afb8c8c-5de3-4230-abe0-2b2f76b99cfa",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should assign training to employee via real API",
+              "fullTitle": "Training Management (Real API) should assign training to employee via real API",
+              "timedOut": null,
+              "duration": 973,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": "{\n  \"title\": \"cypress-mochawesome-reporter-videos-passed\",\n  \"value\": \"cypress\\\\e2e\\\\training.spec.cy.js\"\n}",
+              "code": "trainingsPage.selectEmployee(13);\ntrainingsPage.getSelectedEmployeeName().should('be.visible');\ntrainingsPage.assignTraining(1, 1); // supervisor=Jane Smith, training=Safety Training\ntrainingsPage.getToast().should('contain', 'Training assigned');\ncy.getByCy('current-trainings-table').should('contain', 'Safety Training');",
+              "err": {},
+              "uuid": "ad147e97-c21b-4a01-992a-ac863b189e7c",
+              "parentUUID": "5afb8c8c-5de3-4230-abe0-2b2f76b99cfa",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should complete an assigned training via real API",
+              "fullTitle": "Training Management (Real API) should complete an assigned training via real API",
+              "timedOut": null,
+              "duration": 694,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": "{\n  \"title\": \"cypress-mochawesome-reporter-videos-passed\",\n  \"value\": \"cypress\\\\e2e\\\\training.spec.cy.js\"\n}",
+              "code": "// John Doe has Safety Training assigned from previous test\ntrainingsPage.selectEmployee(13);\ntrainingsPage.getSelectedEmployeeName().should('be.visible');\n// Scroll past the assign card to find current trainings\ncy.getByCy('current-trainings-table', {\n  timeout: 10000\n}).should('be.visible');\n// Find the first complete button and click it\ncy.get('[data-cy^=\"complete-training-btn-\"]').first().should('be.visible').click();\ntrainingsPage.getToast().should('contain', 'completed');",
+              "err": {},
+              "uuid": "b3a1ae0a-2727-43e1-973c-a49eba28f363",
+              "parentUUID": "5afb8c8c-5de3-4230-abe0-2b2f76b99cfa",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should approve a completed training via real API",
+              "fullTitle": "Training Management (Real API) should approve a completed training via real API",
+              "timedOut": null,
+              "duration": 699,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": "{\n  \"title\": \"cypress-mochawesome-reporter-videos-passed\",\n  \"value\": \"cypress\\\\e2e\\\\training.spec.cy.js\"\n}",
+              "code": "trainingsPage.selectEmployee(13);\ntrainingsPage.getSelectedEmployeeName().should('be.visible');\ncy.getByCy('current-trainings-table', {\n  timeout: 10000\n}).should('be.visible');\n// Find the first approve button and click it\ncy.get('[data-cy^=\"approve-training-btn-\"]').first().should('be.visible').click();\ntrainingsPage.getToast().should('contain', 'approved');",
+              "err": {},
+              "uuid": "d7b91f7c-00ce-4032-be11-91aef5607378",
+              "parentUUID": "5afb8c8c-5de3-4230-abe0-2b2f76b99cfa",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "DEF-003: should show error when supervisor self-approves (mocked)",
+              "fullTitle": "Training Management (Real API) DEF-003: should show error when supervisor self-approves (mocked)",
+              "timedOut": null,
+              "duration": 10661,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": "[\n  {\n    \"title\": \"cypress-mochawesome-reporter-videos-failed\",\n    \"value\": \"cypress\\\\e2e\\\\training.spec.cy.js\"\n  },\n  {\n    \"title\": \"cypress-mochawesome-reporter-screenshots\",\n    \"value\": [\n      [\n        \"\\\\training.spec.cy.js\\\\Training Management (Real API) -- DEF-003 should show error when supervisor self-approves (mocked) (failed).png\"\n      ]\n    ]\n  }\n]",
+              "code": "cy.intercept('POST', '**/api/trainings/approve', {\n  statusCode: 400,\n  body: {\n    error: 'Cannot approve your own training'\n  }\n}).as('selfApprove');\ntrainingsPage.selectEmployee(13);\ntrainingsPage.getSelectedEmployeeName().should('be.visible');\ncy.get('[data-cy^=\"approve-training-btn-\"]').first().click();\ncy.wait('@selfApprove');\ntrainingsPage.getToast().should('contain', 'error');",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy^=\"approve-training-btn-\"]`, but never found it.",
+                "estack": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy^=\"approve-training-btn-\"]`, but never found it.\n    at Context.eval (webpack://workforcepro-cypress-automation/./cypress/e2e/training.spec.cy.js:70:7)",
+                "diff": null
+              },
+              "uuid": "363d7f55-d7f1-456e-a6d5-ba6bd6818aab",
+              "parentUUID": "5afb8c8c-5de3-4230-abe0-2b2f76b99cfa",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "DEF-002: should complete training without assignment (mocked)",
+              "fullTitle": "Training Management (Real API) DEF-002: should complete training without assignment (mocked)",
+              "timedOut": null,
+              "duration": 10859,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": "[\n  {\n    \"title\": \"cypress-mochawesome-reporter-videos-failed\",\n    \"value\": \"cypress\\\\e2e\\\\training.spec.cy.js\"\n  },\n  {\n    \"title\": \"cypress-mochawesome-reporter-screenshots\",\n    \"value\": [\n      [\n        \"\\\\training.spec.cy.js\\\\Training Management (Real API) -- DEF-002 should complete training without assignment (mocked) (failed).png\"\n      ]\n    ]\n  }\n]",
+              "code": "cy.intercept('POST', '**/api/trainings/complete', {\n  statusCode: 200,\n  body: {\n    message: 'Training completed successfully'\n  }\n}).as('completeNoAssign');\ntrainingsPage.selectEmployee(999);\ncy.get('[data-cy^=\"complete-training-btn-\"]').first().click();\ncy.wait('@completeNoAssign');\ntrainingsPage.getToast().should('contain', 'success');",
+              "err": {
+                "message": "CypressError: Timed out retrying after 10000ms: `cy.select()` failed because it could not find a single `<option>` with value, index, or text matching: `999`\n\nhttps://on.cypress.io/select",
+                "estack": "CypressError: Timed out retrying after 10000ms: `cy.select()` failed because it could not find a single `<option>` with value, index, or text matching: `999`\n\nhttps://on.cypress.io/select\n    at getOptions (http://localhost:3000/__cypress/runner/cypress_runner.js:114180:72)\n    at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:1830:23)\n    at Promise.attempt.Promise.try (http://localhost:3000/__cypress/runner/cypress_runner.js:4338:29)\n    at retryOptions (http://localhost:3000/__cypress/runner/cypress_runner.js:114212:70)\n    at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:1830:23)\n    at Promise.attempt.Promise.try (http://localhost:3000/__cypress/runner/cypress_runner.js:4338:29)\n    at whenStable (http://localhost:3000/__cypress/runner/cypress_runner.js:143744:68)\n    at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:143685:14)\n    at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:1830:23)\n    at Promise._settlePromiseFromHandler (http://localhost:3000/__cypress/runner/cypress_runner.js:1542:31)\n    at Promise._settlePromise (http://localhost:3000/__cypress/runner/cypress_runner.js:1599:18)\n    at Promise._settlePromise0 (http://localhost:3000/__cypress/runner/cypress_runner.js:1644:10)\n    at Promise._settlePromises (http://localhost:3000/__cypress/runner/cypress_runner.js:1724:18)\n    at Promise._fulfill (http://localhost:3000/__cypress/runner/cypress_runner.js:1668:18)\n    at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:5473:46)\nFrom Your Spec Code:\n    at TrainingsPage.selectEmployee (webpack://workforcepro-cypress-automation/./cypress/support/page-objects/TrainingsPage.js:7:34)\n    at Context.eval (webpack://workforcepro-cypress-automation/./cypress/e2e/training.spec.cy.js:82:18)",
+                "diff": null
+              },
+              "uuid": "aafefc7c-1740-4cad-a1e9-bf22300138b5",
+              "parentUUID": "5afb8c8c-5de3-4230-abe0-2b2f76b99cfa",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should show trainings table when employee has assignments",
+              "fullTitle": "Training Management (Real API) should show trainings table when employee has assignments",
+              "timedOut": null,
+              "duration": 640,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": "{\n  \"title\": \"cypress-mochawesome-reporter-videos-passed\",\n  \"value\": \"cypress\\\\e2e\\\\training.spec.cy.js\"\n}",
+              "code": "cy.intercept('GET', '**/api/employees/*/trainings', {\n  statusCode: 200,\n  body: [{\n    id: 1,\n    training_id: 1,\n    training_name: 'Safety Training',\n    status: 'assigned',\n    due_date: '2026-12-31',\n    completion_date: null\n  }]\n}).as('loadTrainings');\ntrainingsPage.selectEmployee(13);\ncy.wait('@loadTrainings');\ntrainingsPage.getCurrentTrainingsCard().should('be.visible');\ntrainingsPage.getCurrentTrainingsTable().should('be.visible');\ntrainingsPage.getTrainingStatus(1).should('contain', 'assigned');",
+              "err": {},
+              "uuid": "8242f1fd-9df5-4bf3-8c7d-2abfaa772d96",
+              "parentUUID": "5afb8c8c-5de3-4230-abe0-2b2f76b99cfa",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should show approved training status (mocked)",
+              "fullTitle": "Training Management (Real API) should show approved training status (mocked)",
+              "timedOut": null,
+              "duration": 640,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": "{\n  \"title\": \"cypress-mochawesome-reporter-videos-passed\",\n  \"value\": \"cypress\\\\e2e\\\\training.spec.cy.js\"\n}",
+              "code": "cy.intercept('GET', '**/api/employees/*/trainings', {\n  statusCode: 200,\n  body: [{\n    id: 2,\n    training_id: 2,\n    training_name: 'Code of Conduct',\n    status: 'approved',\n    due_date: '2026-11-30',\n    completion_date: '2026-06-01'\n  }]\n}).as('loadApproved');\ntrainingsPage.selectEmployee(13);\ncy.wait('@loadApproved');\ntrainingsPage.getTrainingStatus(2).should('contain', 'approved');\ntrainingsPage.getApprovedLabel(2).should('be.visible');",
+              "err": {},
+              "uuid": "3d3bca2a-4605-44cd-97bb-f4297f22f0a0",
+              "parentUUID": "5afb8c8c-5de3-4230-abe0-2b2f76b99cfa",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "0ab4a7a5-5e93-4c97-a44f-474cd5555a00",
+            "572dd2ce-8d0e-4f0e-8201-359cc5758642",
+            "ad147e97-c21b-4a01-992a-ac863b189e7c",
+            "b3a1ae0a-2727-43e1-973c-a49eba28f363",
+            "d7b91f7c-00ce-4032-be11-91aef5607378",
+            "8242f1fd-9df5-4bf3-8c7d-2abfaa772d96",
+            "3d3bca2a-4605-44cd-97bb-f4297f22f0a0"
+          ],
+          "failures": [
+            "363d7f55-d7f1-456e-a6d5-ba6bd6818aab",
+            "aafefc7c-1740-4cad-a1e9-bf22300138b5"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 26475,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.0.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "workforcepro-test-report",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.4"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "reports\\html\\.jsons",
+        "reportFilename": "workforcepro-test-report",
+        "html": false,
+        "json": true,
+        "overwrite": false,
+        "charts": true,
+        "embeddedScreenshots": true,
+        "inlineAssets": true,
+        "saveAllAttempts": false
+      },
+      "version": "6.3.2"
+    }
+  }
+}

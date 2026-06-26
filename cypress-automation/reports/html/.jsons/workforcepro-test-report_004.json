@@ -1,0 +1,337 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 11,
+    "passes": 2,
+    "pending": 0,
+    "failures": 9,
+    "start": "2026-06-26T05:01:57.990Z",
+    "end": "2026-06-26T05:03:35.774Z",
+    "duration": 97784,
+    "testsRegistered": 11,
+    "passPercent": 18.181818181818183,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "367f1e1d-5f0f-4fb1-a6f7-562ace5507f3",
+      "title": "",
+      "fullFile": "cypress\\e2e\\certification.spec.cy.js",
+      "file": "cypress\\e2e\\certification.spec.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "0d6e5bc0-d454-4efc-ad46-1ac328bc97a6",
+          "title": "Certification Management (Mocked API)",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "should display certifications page with all elements",
+              "fullTitle": "Certification Management (Mocked API) should display certifications page with all elements",
+              "timedOut": null,
+              "duration": 1015,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": "{\n  \"title\": \"cypress-mochawesome-reporter-videos-passed\",\n  \"value\": \"cypress\\\\e2e\\\\certification.spec.cy.js\"\n}",
+              "code": "certificationsPage.getPageHeader().should('be.visible');\ncertificationsPage.getPageTitle().should('contain', 'Certification Management');\ncertificationsPage.getCard().should('be.visible');\ncertificationsPage.getTable().should('be.visible');\ncertificationsPage.getCheckExpiringButton().should('be.visible');\ncertificationsPage.getCount().should('contain', 'Total:');",
+              "err": {},
+              "uuid": "01a6f80a-c2d0-4353-a130-670c8373ec2a",
+              "parentUUID": "0d6e5bc0-d454-4efc-ad46-1ac328bc97a6",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should display using CertificationList component",
+              "fullTitle": "Certification Management (Mocked API) should display using CertificationList component",
+              "timedOut": null,
+              "duration": 10568,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": "[\n  {\n    \"title\": \"cypress-mochawesome-reporter-videos-failed\",\n    \"value\": \"cypress\\\\e2e\\\\certification.spec.cy.js\"\n  },\n  {\n    \"title\": \"cypress-mochawesome-reporter-screenshots\",\n    \"value\": [\n      [\n        \"\\\\certification.spec.cy.js\\\\Certification Management (Mocked API) -- should display using CertificationList component (failed).png\"\n      ]\n    ]\n  }\n]",
+              "code": "certificationsPage.getCertList().should('be.visible');\ncertificationsPage.getCertListTitle().should('contain', 'Certifications');\ncertificationsPage.getCertListTable().should('be.visible');\ncertificationsPage.getAddCertButton().should('be.visible');\ncertificationsPage.getCheckExpiringListButton().should('be.visible');\ncertificationsPage.getCertListCount().should('contain', 'Total:');",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy=\"cert-list\"]`, but never found it.",
+                "estack": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy=\"cert-list\"]`, but never found it.\n    at Context.eval (webpack://workforcepro-cypress-automation/./cypress/e2e/certification.spec.cy.js:25:37)",
+                "diff": null
+              },
+              "uuid": "b98953e3-7cc4-48ab-8416-f255245bbe39",
+              "parentUUID": "0d6e5bc0-d454-4efc-ad46-1ac328bc97a6",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should add a certification via modal",
+              "fullTitle": "Certification Management (Mocked API) should add a certification via modal",
+              "timedOut": null,
+              "duration": 10527,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": "[\n  {\n    \"title\": \"cypress-mochawesome-reporter-videos-failed\",\n    \"value\": \"cypress\\\\e2e\\\\certification.spec.cy.js\"\n  },\n  {\n    \"title\": \"cypress-mochawesome-reporter-screenshots\",\n    \"value\": [\n      [\n        \"\\\\certification.spec.cy.js\\\\Certification Management (Mocked API) -- should add a certification via modal (failed).png\"\n      ]\n    ]\n  }\n]",
+              "code": "cy.intercept('POST', '**/api/certifications', {\n  statusCode: 200,\n  body: {\n    message: 'Certification created successfully'\n  }\n}).as('createCert');\ncertificationsPage.openAddModal();\ncertificationsPage.getModalTitle().should('contain', 'Assign Certification');\ncertificationsPage.fillCertModal({\n  employee: 1,\n  name: 'AWS Certified Developer',\n  expiry: '2027-12-31'\n});\ncertificationsPage.submitModal();\ncy.wait('@createCert');\ncertificationsPage.getModalSuccess().should('be.visible');",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy=\"add-cert-btn\"]`, but never found it.",
+                "estack": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy=\"add-cert-btn\"]`, but never found it.\n    at Context.eval (webpack://workforcepro-cypress-automation/./cypress/support/commands.js:2:12)",
+                "diff": null
+              },
+              "uuid": "205aea8c-4965-4ca3-a651-9f53a6133d4c",
+              "parentUUID": "0d6e5bc0-d454-4efc-ad46-1ac328bc97a6",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should add a certification via inline form",
+              "fullTitle": "Certification Management (Mocked API) should add a certification via inline form",
+              "timedOut": null,
+              "duration": 10560,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": "[\n  {\n    \"title\": \"cypress-mochawesome-reporter-videos-failed\",\n    \"value\": \"cypress\\\\e2e\\\\certification.spec.cy.js\"\n  },\n  {\n    \"title\": \"cypress-mochawesome-reporter-screenshots\",\n    \"value\": [\n      [\n        \"\\\\certification.spec.cy.js\\\\Certification Management (Mocked API) -- should add a certification via inline form (failed).png\"\n      ]\n    ]\n  }\n]",
+              "code": "cy.intercept('POST', '**/api/certifications', {\n  statusCode: 200,\n  body: {\n    message: 'Certification assigned successfully'\n  }\n}).as('createCertForm');\ncertificationsPage.getForm().should('be.visible');\ncertificationsPage.getFormTitle().should('contain', 'Assign Certification');\ncertificationsPage.fillCertForm({\n  employee: 1,\n  name: 'AWS Certified Solutions Architect',\n  expiry: '2027-06-30'\n});\ncertificationsPage.submitForm();\ncy.wait('@createCertForm');\ncertificationsPage.getFormSuccess().should('be.visible');",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy=\"cert-form\"]`, but never found it.",
+                "estack": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy=\"cert-form\"]`, but never found it.\n    at Context.eval (webpack://workforcepro-cypress-automation/./cypress/e2e/certification.spec.cy.js:58:33)",
+                "diff": null
+              },
+              "uuid": "02ca58a1-a47a-4eb4-bbd6-c27a4d7b169b",
+              "parentUUID": "0d6e5bc0-d454-4efc-ad46-1ac328bc97a6",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should delete a certification",
+              "fullTitle": "Certification Management (Mocked API) should delete a certification",
+              "timedOut": null,
+              "duration": 10854,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": "[\n  {\n    \"title\": \"cypress-mochawesome-reporter-videos-failed\",\n    \"value\": \"cypress\\\\e2e\\\\certification.spec.cy.js\"\n  },\n  {\n    \"title\": \"cypress-mochawesome-reporter-screenshots\",\n    \"value\": [\n      [\n        \"\\\\certification.spec.cy.js\\\\Certification Management (Mocked API) -- should delete a certification (failed).png\"\n      ]\n    ]\n  }\n]",
+              "code": "cy.intercept('DELETE', '**/api/certifications/*', {\n  statusCode: 200,\n  body: {\n    message: 'Certification deleted'\n  }\n}).as('deleteCert');\ncertificationsPage.getCertListTable({\n  timeout: 10000\n}).should('be.visible');\ncertificationsPage.deleteFirstCert();\ncy.wait('@deleteCert');\ncertificationsPage.getCertListMessage().should('be.visible');",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy=\"cert-list-table\"]`, but never found it.",
+                "estack": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy=\"cert-list-table\"]`, but never found it.\n    at Context.eval (webpack://workforcepro-cypress-automation/./cypress/e2e/certification.spec.cy.js:77:60)",
+                "diff": null
+              },
+              "uuid": "a9fbfb5d-9c71-46fb-8db3-57e0b3dd010a",
+              "parentUUID": "0d6e5bc0-d454-4efc-ad46-1ac328bc97a6",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should check expiring certifications",
+              "fullTitle": "Certification Management (Mocked API) should check expiring certifications",
+              "timedOut": null,
+              "duration": 10528,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": "[\n  {\n    \"title\": \"cypress-mochawesome-reporter-videos-failed\",\n    \"value\": \"cypress\\\\e2e\\\\certification.spec.cy.js\"\n  },\n  {\n    \"title\": \"cypress-mochawesome-reporter-screenshots\",\n    \"value\": [\n      [\n        \"\\\\certification.spec.cy.js\\\\Certification Management (Mocked API) -- should check expiring certifications (failed).png\"\n      ]\n    ]\n  }\n]",
+              "code": "cy.intercept('GET', '**/api/certifications/expiring', {\n  statusCode: 200,\n  body: [{\n    id: 1,\n    employee_name: 'John Doe',\n    certification_name: 'First Aid',\n    expiry_date: '2026-07-15',\n    days_left: 20\n  }, {\n    id: 2,\n    employee_name: 'Jane Smith',\n    certification_name: 'Safety',\n    expiry_date: '2026-07-20',\n    days_left: 25\n  }]\n}).as('checkExpiring');\ncertificationsPage.getCheckExpiringListButton().click();\ncy.wait('@checkExpiring');\ncertificationsPage.getCertListMessage().should('be.visible');",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy=\"cert-list-check-expiring\"]`, but never found it.",
+                "estack": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy=\"cert-list-check-expiring\"]`, but never found it.\n    at Context.eval (webpack://workforcepro-cypress-automation/./cypress/support/commands.js:2:12)",
+                "diff": null
+              },
+              "uuid": "4b0b3aab-0ba6-498d-86f4-44fee14acc6a",
+              "parentUUID": "0d6e5bc0-d454-4efc-ad46-1ac328bc97a6",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should show days-left warning for near-expiry certs",
+              "fullTitle": "Certification Management (Mocked API) should show days-left warning for near-expiry certs",
+              "timedOut": null,
+              "duration": 10860,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": "[\n  {\n    \"title\": \"cypress-mochawesome-reporter-videos-failed\",\n    \"value\": \"cypress\\\\e2e\\\\certification.spec.cy.js\"\n  },\n  {\n    \"title\": \"cypress-mochawesome-reporter-screenshots\",\n    \"value\": [\n      [\n        \"\\\\certification.spec.cy.js\\\\Certification Management (Mocked API) -- should show days-left warning for near-expiry certs (failed).png\"\n      ]\n    ]\n  }\n]",
+              "code": "cy.intercept('GET', '**/api/certifications', {\n  statusCode: 200,\n  body: [{\n    id: 10,\n    employee_name: 'Test User',\n    certification_name: 'Expiring Cert',\n    expiry_date: '2026-07-10',\n    days_left: 15\n  }]\n}).as('loadCerts');\ncy.wait('@loadCerts');\ncertificationsPage.getCertRow(10).should('be.visible');\ncertificationsPage.getCertDaysLeft(10).should('be.visible');\ncertificationsPage.getCertDaysLeft(10).invoke('text').then(Number).should('be.lt', 30);\ncertificationsPage.getDeleteCertButton(10).should('be.visible');",
+              "err": {
+                "message": "CypressError: Timed out retrying after 10000ms: `cy.wait()` timed out waiting `10000ms` for the 1st request to the route: `loadCerts`. No request ever occurred.\n\nhttps://on.cypress.io/wait",
+                "estack": "CypressError: Timed out retrying after 10000ms: `cy.wait()` timed out waiting `10000ms` for the 1st request to the route: `loadCerts`. No request ever occurred.\n\nhttps://on.cypress.io/wait\n    at cypressErr (http://localhost:3000/__cypress/runner/cypress_runner.js:76065:18)\n    at Object.errByPath (http://localhost:3000/__cypress/runner/cypress_runner.js:76119:10)\n    at checkForXhr (http://localhost:3000/__cypress/runner/cypress_runner.js:135342:84)\n    at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:135368:28)\n    at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:1830:23)\n    at Promise.attempt.Promise.try (http://localhost:3000/__cypress/runner/cypress_runner.js:4338:29)\n    at whenStable (http://localhost:3000/__cypress/runner/cypress_runner.js:143744:68)\n    at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:143685:14)\n    at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:1830:23)\n    at Promise._settlePromiseFromHandler (http://localhost:3000/__cypress/runner/cypress_runner.js:1542:31)\n    at Promise._settlePromise (http://localhost:3000/__cypress/runner/cypress_runner.js:1599:18)\n    at Promise._settlePromise0 (http://localhost:3000/__cypress/runner/cypress_runner.js:1644:10)\n    at Promise._settlePromises (http://localhost:3000/__cypress/runner/cypress_runner.js:1724:18)\n    at Promise._fulfill (http://localhost:3000/__cypress/runner/cypress_runner.js:1668:18)\n    at <unknown> (http://localhost:3000/__cypress/runner/cypress_runner.js:5473:46)\nFrom Your Spec Code:\n    at Context.eval (webpack://workforcepro-cypress-automation/./cypress/e2e/certification.spec.cy.js:106:7)",
+                "diff": null
+              },
+              "uuid": "28550d05-bde2-48dc-983c-2396ca0b9a42",
+              "parentUUID": "0d6e5bc0-d454-4efc-ad46-1ac328bc97a6",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should display bug note about DEF-003",
+              "fullTitle": "Certification Management (Mocked API) should display bug note about DEF-003",
+              "timedOut": null,
+              "duration": 495,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": "{\n  \"title\": \"cypress-mochawesome-reporter-videos-passed\",\n  \"value\": \"cypress\\\\e2e\\\\certification.spec.cy.js\"\n}",
+              "code": "certificationsPage.getBugNote().should('be.visible');",
+              "err": {},
+              "uuid": "3bfeec1a-07ad-413e-bf6b-a3a0964026b4",
+              "parentUUID": "0d6e5bc0-d454-4efc-ad46-1ac328bc97a6",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should close cert modal via close button",
+              "fullTitle": "Certification Management (Mocked API) should close cert modal via close button",
+              "timedOut": null,
+              "duration": 10565,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": "[\n  {\n    \"title\": \"cypress-mochawesome-reporter-videos-failed\",\n    \"value\": \"cypress\\\\e2e\\\\certification.spec.cy.js\"\n  },\n  {\n    \"title\": \"cypress-mochawesome-reporter-screenshots\",\n    \"value\": [\n      [\n        \"\\\\certification.spec.cy.js\\\\Certification Management (Mocked API) -- should close cert modal via close button (failed).png\"\n      ]\n    ]\n  }\n]",
+              "code": "certificationsPage.openAddModal();\ncertificationsPage.closeModal();\ncertificationsPage.getModal().should('not.exist');",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy=\"add-cert-btn\"]`, but never found it.",
+                "estack": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy=\"add-cert-btn\"]`, but never found it.\n    at Context.eval (webpack://workforcepro-cypress-automation/./cypress/support/commands.js:2:12)",
+                "diff": null
+              },
+              "uuid": "5b7247c7-6c97-4fad-aaee-ab5b335af286",
+              "parentUUID": "0d6e5bc0-d454-4efc-ad46-1ac328bc97a6",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should close cert modal via cancel button",
+              "fullTitle": "Certification Management (Mocked API) should close cert modal via cancel button",
+              "timedOut": null,
+              "duration": 10880,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": "[\n  {\n    \"title\": \"cypress-mochawesome-reporter-videos-failed\",\n    \"value\": \"cypress\\\\e2e\\\\certification.spec.cy.js\"\n  },\n  {\n    \"title\": \"cypress-mochawesome-reporter-screenshots\",\n    \"value\": [\n      [\n        \"\\\\certification.spec.cy.js\\\\Certification Management (Mocked API) -- should close cert modal via cancel button (failed).png\"\n      ]\n    ]\n  }\n]",
+              "code": "certificationsPage.openAddModal();\ncertificationsPage.cancelModal();\ncertificationsPage.getModal().should('not.exist');",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy=\"add-cert-btn\"]`, but never found it.",
+                "estack": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy=\"add-cert-btn\"]`, but never found it.\n    at Context.eval (webpack://workforcepro-cypress-automation/./cypress/support/commands.js:2:12)",
+                "diff": null
+              },
+              "uuid": "7bbe8feb-ddb6-4ca9-a4ee-df6ca96b3d84",
+              "parentUUID": "0d6e5bc0-d454-4efc-ad46-1ac328bc97a6",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should show error on cert creation failure",
+              "fullTitle": "Certification Management (Mocked API) should show error on cert creation failure",
+              "timedOut": null,
+              "duration": 10577,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": "[\n  {\n    \"title\": \"cypress-mochawesome-reporter-videos-failed\",\n    \"value\": \"cypress\\\\e2e\\\\certification.spec.cy.js\"\n  },\n  {\n    \"title\": \"cypress-mochawesome-reporter-screenshots\",\n    \"value\": [\n      [\n        \"\\\\certification.spec.cy.js\\\\Certification Management (Mocked API) -- should show error on cert creation failure (failed).png\"\n      ]\n    ]\n  }\n]",
+              "code": "cy.intercept('POST', '**/api/certifications', {\n  statusCode: 500,\n  body: {\n    error: 'Internal server error'\n  }\n}).as('createCertFail');\ncertificationsPage.openAddModal();\ncertificationsPage.fillCertModal({\n  employee: 1,\n  name: 'Failing Cert',\n  expiry: '2027-12-31'\n});\ncertificationsPage.submitModal();\ncy.wait('@createCertFail');\ncertificationsPage.getModalError().should('be.visible');",
+              "err": {
+                "message": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy=\"add-cert-btn\"]`, but never found it.",
+                "estack": "AssertionError: Timed out retrying after 10000ms: Expected to find element: `[data-cy=\"add-cert-btn\"]`, but never found it.\n    at Context.eval (webpack://workforcepro-cypress-automation/./cypress/support/commands.js:2:12)",
+                "diff": null
+              },
+              "uuid": "a68967b2-7856-4521-a658-b28f57f8a7ef",
+              "parentUUID": "0d6e5bc0-d454-4efc-ad46-1ac328bc97a6",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "01a6f80a-c2d0-4353-a130-670c8373ec2a",
+            "3bfeec1a-07ad-413e-bf6b-a3a0964026b4"
+          ],
+          "failures": [
+            "b98953e3-7cc4-48ab-8416-f255245bbe39",
+            "205aea8c-4965-4ca3-a651-9f53a6133d4c",
+            "02ca58a1-a47a-4eb4-bbd6-c27a4d7b169b",
+            "a9fbfb5d-9c71-46fb-8db3-57e0b3dd010a",
+            "4b0b3aab-0ba6-498d-86f4-44fee14acc6a",
+            "28550d05-bde2-48dc-983c-2396ca0b9a42",
+            "5b7247c7-6c97-4fad-aaee-ab5b335af286",
+            "7bbe8feb-ddb6-4ca9-a4ee-df6ca96b3d84",
+            "a68967b2-7856-4521-a658-b28f57f8a7ef"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 97429,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.0.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "workforcepro-test-report",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.4"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "reports\\html\\.jsons",
+        "reportFilename": "workforcepro-test-report",
+        "html": false,
+        "json": true,
+        "overwrite": false,
+        "charts": true,
+        "embeddedScreenshots": true,
+        "inlineAssets": true,
+        "saveAllAttempts": false
+      },
+      "version": "6.3.2"
+    }
+  }
+}
